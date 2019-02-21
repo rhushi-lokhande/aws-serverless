@@ -1,0 +1,50 @@
+
+
+service: locusnine-service-dev
+provider:
+  name: aws
+  runtime: nodejs8.10
+  profile: default
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:*"
+      Resource:
+        - "arn:aws:dynamodb:*:*"
+
+resources:
+  Resources:
+    LocusnineSaleDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: 'locusnineSaleDev'
+
+functions:
+  create:
+    handler: handler.create
+    events:
+      -
+        http:
+          path: user/create
+          method: get
+          cors: true
+  getSaleData:
+      handler: handler.getSaleData
+      events:
+        -
+          http:
+            path: user/getSaleData
+            method: get
+            cors: true
