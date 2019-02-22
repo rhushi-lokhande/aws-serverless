@@ -1,0 +1,21 @@
+<div class="row">
+	<div class="col-12">
+		<div *ngFor="let card of leftCardDetails; trackBy: index;let i = index" [className]="'sw card card-'+(i+1)">
+			<div class="title">
+				{{card.name}}
+			</div>
+			<div class="row">
+				<div class="col-6">New MMR</div>
+				<div class="col-6 card-value">{{card.newMMR}}</div>
+			</div>
+			<div class="row">
+				<div class="col-6">New Logos</div>
+				<div class="col-6 card-value">{{card.newLogos}}</div>
+			</div>
+			<div class="row">
+				<div class="col-6">Demo Call</div>
+				<div class="col-6 card-value">{{card.demoCalls}}</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,77 @@
+.dashboard{
+    box-shadow:   inset 0 -8px 9px -8px #cccccc;
+    padding-bottom: 30px;
+}
+.reps-filter{
+    list-style: none;
+    background-color: #FFF;
+    margin-top: 20px;
+    height: 50px;
+}
+.card{
+    padding: 30px;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    margin-top: 30px;
+    height: 200px;
+    background-image: url('../../../../assets/images/winner.png');
+    background-repeat: no-repeat;
+    background-size: 71% 86%;
+    font-size: 18px;
+    background-repeat: no-repeat;
+    background-size: 23%;
+    background-position: 30px 30px;
+    display: flex;
+    justify-content: flex-end;
+}
+.card .heading{
+    text-transform: uppercase;
+    text-align: right;
+    color: #b3b3b3;
+}
+.card .value{
+    text-transform: uppercase;
+    text-align: right;
+    color: #878788;
+    font-size: 28px;
+    font-weight: bold;
+    color: #2196F3;
+}
+
+.calls{
+    background-image: url('../../../../assets/images/ico-calls.png');
+}
+.wins{
+    background-image: url('../../../../assets/images/ico-wins.png');
+}
+.revenue{
+    background-image: url('../../../../assets/images/ico-revenue.png');
+}
+.funnel{
+    background-image: url('../../../../assets/images/funnel.png');
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin-top: 30px;
+    color: #FFF;
+}
+.funnel .funnel-data{
+    text-align: center;
+    padding: 15px;
+}
+.funnel .funnel-data .value{
+    font-size: 34px;
+    font-weight: bold;
+    line-height: 30px;
+}
+.funnel .funnel-data .heading{
+    text-align: center;
+    font-size: 18px;
+}
+.details-container{
+    padding-top: 30px;
+    background-color: #FFF;
+}

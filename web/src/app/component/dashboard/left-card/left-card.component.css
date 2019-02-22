@@ -1,0 +1,35 @@
+.card{
+    padding: 20px;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    margin-top: 30px;
+    height: 200px;
+    background-image: url('../../../../assets/images/winner.png');
+    background-repeat: no-repeat;
+    background-size: 71% 86%;
+    color: #FFF;
+    font-size: 18px;
+}
+.card-1{
+    background-color: #1976D2;
+}
+.card-2{
+    background-color: #2196F3;
+}
+.card-3{
+    background-color: #64B5F6;
+}
+.card .title{
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.card-value{
+    text-align: right;
+    font-weight: bold;
+    font-size: 30px;
+    line-height: 34px;
+}
