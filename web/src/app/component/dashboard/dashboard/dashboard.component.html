@@ -1,52 +1,58 @@
-<app-menubar [menuList]="topMenu" (onSelected)="topMenuClick($event)"></app-menubar>
-<div class="row dashboard">
-	<div class="col-9">
-		<div class="row">
-			<div class="col-12">
-				<div class="reps-filter sw">
-					<div class="col-4">
-						<ng-select  [(ngModel)]="selectedRep" class="custom" [items]="reps" [searchable]="0" [placeholder]="'Select Rep'" ></ng-select>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-8 ">
-				<div class="funnel">
-					<div class="funnel-data" *ngFor="let f of funnel;">
-						<div class="heading"> {{f}}</div>
-						<div class="value">{{selectedRep ?saleDetails.rep[selectedRep].funnel[f]:saleDetails?.funnel[f]||'0'}}</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-4">
-				<div class="card sw calls">
-					<div class="heading">Calls</div>
-					<div class="value">{{saleDetails.call}}/{{target.call[filter]}}</div>
-				</div>
-				<div class="card sw wins">
-					<div class="heading">Wins</div>
-					<div class="value">{{saleDetails.won}}/{{target.won[filter]}}</div>
-
-				</div>
-				<div class="card sw revenue">
-					<div class="heading">Incremented Revenue</div>
-					<div class="value">80/120k</div>
-				</div>
-			</div>
-		</div>
+<div class="dashboard">
+	<div class="loading" *ngIf="!saleDetails">
+		<h3>Loading....</h3>
 	</div>
-	<div class="col-3">
-		<app-menubar [menuList]="leftMenu" [selected]="leftSort" (onSelected)="toLeftMenuClick($event)"></app-menubar>
-		<app-left-card [leftCardDetails]="leftCardDetails"></app-left-card>
+	<app-menubar [menuList]="topMenu" (onSelected)="topMenuClick($event)"></app-menubar>
+	<div class="row ">
+
+		<div class="col-9">
+			<div class="row">
+				<div class="col-12">
+					<div class="reps-filter sw">
+						<div class="col-4">
+							<ng-select [(ngModel)]="selectedRep" class="custom" [items]="reps" [searchable]="0" [placeholder]="'Select Rep'"></ng-select>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-8 ">
+					<div class="funnel">
+						<div class="funnel-data" *ngFor="let f of funnel;">
+							<div class="heading"> {{f}}</div>
+							<div class="value">{{selectedRep ?saleDetails.rep[selectedRep].funnel[f]:saleDetails?.funnel[f]||'0'}}</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="card sw calls">
+						<div class="heading">Calls</div>
+						<div class="value">{{saleDetails.call}}/{{target.call[filter]}}</div>
+					</div>
+					<div class="card sw wins">
+						<div class="heading">Wins</div>
+						<div class="value">{{saleDetails.won}}/{{target.won[filter]}}</div>
+
+					</div>
+					<div class="card sw revenue">
+						<div class="heading">Incremented Revenue</div>
+						<div class="value">80/120k</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-3">
+			<app-menubar [menuList]="leftMenu" [selected]="leftSort" (onSelected)="toLeftMenuClick($event)"></app-menubar>
+			<app-left-card [leftCardDetails]="leftCardDetails"></app-left-card>
+		</div>
 	</div>
 </div>
 <div class="row details-container">
 	<div class="col-12">
 		<h5>Details</h5>
 		<div class="row">
-			<table class="table table-striped table-hover" >
+			<table class="table table-striped table-hover">
 				<thead>
 					<tr>
 						<th scope="col">Sale Rep</th>
@@ -59,8 +65,10 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr *ngIf="!saleDetails" >
-						<td colspan="1000" class="text-center"><h5>Loading...</h5></td>
+					<tr *ngIf="!saleDetails">
+						<td colspan="1000" class="text-center">
+							<h5>Loading...</h5>
+						</td>
 					</tr>
 					<tr *ngFor="let d of saleDetails?.Items">
 						<td>{{d.Rep}}</td>
