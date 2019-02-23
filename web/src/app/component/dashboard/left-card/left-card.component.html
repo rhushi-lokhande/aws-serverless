@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-12">
-		<div *ngFor="let card of leftCardDetails; trackBy: index;let i = index" [className]="'sw card card-'+(i+1)">
+		<div *ngFor="let card of leftCardDetails;let i = index" [className]="'sw card card-'+(i+1)">
 			<div class="title">
 				{{card.name}}
 			</div>
