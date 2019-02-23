@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
+import { DashboardService } from './dashboard.service';
+import { CONST } from './const';
 @Component({
 	selector: 'app-dashboard',
 	templateUrl: './dashboard.component.html',
@@ -7,37 +8,64 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
-	topMenu = ['Today', 'Last Week', 'Last Month', 'This Quarter', 'This Year']
-	leftMenu = ['Top', 'Bottom']
-	items = [ {id: 1, name: 'New item'}, {id: 1, name: 'New item'}, {id: 1, name: 'New item'}];
-	leftCardDetails = [
-		{
-			name: 'John dev',
-			newMMR: 1320,
-			newLogos: 125,
-			demoCalls: 20
-		},
-		{
-			name: 'John dev',
-			newMMR: 1320,
-			newLogos: 125,
-			demoCalls: 20
-		},
-		{
-			name: 'John dev',
-			newMMR: 1320,
-			newLogos: 125,
-			demoCalls: 20
-		}
-	]
-	constructor() { }
+	filter='Today';
+	topMenu = CONST.topMenu;
+	leftMenu = CONST.leftMenu;
+	funnel = CONST.funnel;
+	target= CONST.target;
+	reps = [];
+	saleDetails;
+	selectedRep;
+	leftCardDetails = [];
+	leftSort;
+	constructor(private dashboardService: DashboardService) { }
 
 	ngOnInit() {
+		this.getData();
 	}
-	toMenuClick(menu) {
-		console.log(menu);
+	getData(){
+		console.log('ddd')
+		this.saleDetails= undefined;
+		this.selectedRep = undefined;
+		this.leftCardDetails = [];
+		this.dashboardService.getDetails(this.filter).subscribe(res => {
+			this.saleDetails = res;
+			this.reps = Object.keys(this.saleDetails.rep);
+			this.getLeftCardReps(this.leftSort)
+		})
+	}
+	getLeftCardReps(dir='Top'){
+		this.leftCardDetails = [];
+		this.reps.sort((a, b) => {
+			if (this.saleDetails.rep[a].newMMR < this.saleDetails.rep[b].newMMR)
+				return 1;
+			if (this.saleDetails.rep[a].newMMR > this.saleDetails.rep[b].newMMR)
+				return -1;
+			return 0;
+		});
+		if(dir==='Top'){
+			this.reps.slice(0,3).map(r=>{
+				let d = this.saleDetails.rep[r];
+				d.name = r;
+				this.leftCardDetails.push(d)
+			})
+		}else{
+			this.reps.reverse().slice(0,3).map(r=>{
+				let d = this.saleDetails.rep[r];
+				d.name = r;
+				this.leftCardDetails.push(d)
+			})
+		}
+	}
+	topMenuClick(menu) {
+		this.filter = menu;
+		this.getData();
 	}
 	toLeftMenuClick(menu) {
-		console.log(menu);
+		this.leftSort = menu;
+		this.getLeftCardReps(this.leftSort);
+	}
+	getDate(time) {
+		return new Date(time);
 	}
 }

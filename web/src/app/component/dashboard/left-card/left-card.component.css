@@ -9,9 +9,10 @@
     height: 200px;
     background-image: url('../../../../assets/images/winner.png');
     background-repeat: no-repeat;
-    background-size: 71% 86%;
+    background-size: 57% 80%;
     color: #FFF;
     font-size: 18px;
+    background-position: 48px 40px;
 }
 .card-1{
     background-color: #1976D2;

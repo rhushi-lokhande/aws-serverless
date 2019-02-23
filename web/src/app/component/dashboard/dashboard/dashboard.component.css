@@ -61,6 +61,7 @@
 .funnel .funnel-data{
     text-align: center;
     padding: 15px;
+    height: 88px;
 }
 .funnel .funnel-data .value{
     font-size: 34px;
