@@ -3,16 +3,23 @@ const AWS = require("aws-sdk");
 const dynamoDb = new AWS.DynamoDB.DocumentClient()
 const tableName = 'locusnineSaleDev'
 module.exports.getSaleData = (e, cb) => {
+    let ExpressionAttributeValues = {
+        ":to": parseInt(e.queryStringParameters.to),
+        ":from": parseInt(e.queryStringParameters.from),
+    }
+    let FilterExpression = "#id > :from and #id < :to " + (e.queryStringParameters.reps ? "and Rep = :rep" : "");
+    if (e.queryStringParameters.reps && e.queryStringParameters.reps.length) {
+        ExpressionAttributeValues[":rep"] = e.queryStringParameters.reps;
+    }
     const param = {
         TableName: tableName,
-        FilterExpression: "#id > :from and #id < :to",
+        IndexName: "id-index",
+        FilterExpression: FilterExpression,
         ExpressionAttributeNames: {
             "#id": "id",
         },
-        ExpressionAttributeValues: {
-             ":to": parseInt(e.queryStringParameters.to),
-             ":from": parseInt(e.queryStringParameters.from)
-        }
+        ExpressionAttributeValues: ExpressionAttributeValues,
+        ScanIndexForward: true
     }
     dynamoDb.scan(param, (error, result) => {
         if (error) {
@@ -23,6 +30,91 @@ module.exports.getSaleData = (e, cb) => {
         return;
     })
 }
+module.exports.getReps = (e, cb) => {
+    const param = {
+        TableName: 'locusnineRepsDev',
+    }
+    dynamoDb.scan(param, (error, result) => {
+        if (error) {
+            cb(error);
+            return;
+        }
+        cb(null, FR(200, result));
+        return;
+    })
+}
+
+module.exports.getLeftPanelData = (e, cb)=>{
+
+    let dir = e.queryStringParameters.dir|| 'Top';
+    let ExpressionAttributeValues = {
+        ":to": parseInt(e.queryStringParameters.to),
+        ":from": parseInt(e.queryStringParameters.from),
+    }
+    let FilterExpression = "#id > :from and #id < :to ";
+
+    const param = {
+        TableName: tableName,
+        IndexName: "id-index",
+        FilterExpression: FilterExpression,
+        ExpressionAttributeNames: {
+            "#id": "id",
+        },
+        ExpressionAttributeValues: ExpressionAttributeValues,
+        ScanIndexForward: true
+    }
+    dynamoDb.scan(param, (error, result) => {
+        if (error) {
+            cb(error);
+            return;
+        }
+
+        data = result;
+        data.rep = {};
+        data.Items.map(d => {
+			if (!data.rep[d.Rep]) {
+				data.rep[d.Rep] = {
+					newMMR: 0,
+					newLogos: 0,
+					demoCalls: 0
+				};
+			}
+
+			data.rep[d.Rep].newMMR += d.MMR;
+			data.rep[d.Rep].newLogos += d.Logo;
+			if (d.status === 'Contact Made') {
+				data.rep[d.Rep].demoCalls++;
+				data.call++;
+			}
+        })
+
+        let reps = Object.keys(data.rep);
+        let leftCardDetails=[];
+		reps.sort((a, b) => {
+			if (data.rep[a].newMMR < data.rep[b].newMMR)
+				return 1;
+			if (data.rep[a].newMMR > data.rep[b].newMMR)
+				return -1;
+			return 0;
+		});
+		if (dir === 'Top') {
+			reps.slice(0, 3).map(r => {
+				let d = data.rep[r];
+				d.name = r;
+				leftCardDetails.push(d)
+			})
+		} else {
+			reps.reverse().slice(0, 3).map(r => {
+				let d = data.rep[r];
+				d.name = r;
+				leftCardDetails.push(d)
+			})
+		}
+        cb(null, FR(200, {data:leftCardDetails}));
+        return;
+    })
+}
+
 function getRandomizer(bottom, top) {
     return Math.floor(Math.random() * (1 + top - bottom)) + bottom;
 }

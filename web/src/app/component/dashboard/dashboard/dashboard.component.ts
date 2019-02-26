@@ -8,11 +8,11 @@ import { CONST } from './const';
 })
 export class DashboardComponent implements OnInit {
 
-	filter='Today';
+	filter = 'Today';
 	topMenu = CONST.topMenu;
 	leftMenu = CONST.leftMenu;
 	funnel = CONST.funnel;
-	target= CONST.target;
+	target = CONST.target;
 	reps = [];
 	saleDetails;
 	selectedRep;
@@ -22,48 +22,34 @@ export class DashboardComponent implements OnInit {
 
 	ngOnInit() {
 		this.getData();
+		this.getResp();
+		this.getLeftPanelData()
 	}
-	getData(){
-		console.log('ddd')
-		this.saleDetails= undefined;
-		this.selectedRep = undefined;
-		this.leftCardDetails = [];
-		this.dashboardService.getDetails(this.filter).subscribe(res => {
-			this.saleDetails = res;
-			this.reps = Object.keys(this.saleDetails.rep);
-			this.getLeftCardReps(this.leftSort)
+	getResp() {
+		this.dashboardService.getResp().subscribe((res: any) => {
+			this.reps = [{ rep: 'All' }, ...res.Items];
 		})
 	}
-	getLeftCardReps(dir='Top'){
+	getData() {
+		this.saleDetails = undefined;
+		this.dashboardService.getDetails(this.filter, this.selectedRep || 'All').subscribe(res => {
+			this.saleDetails = res;
+		})
+	}
+	getLeftPanelData() {
 		this.leftCardDetails = [];
-		this.reps.sort((a, b) => {
-			if (this.saleDetails.rep[a].newMMR < this.saleDetails.rep[b].newMMR)
-				return 1;
-			if (this.saleDetails.rep[a].newMMR > this.saleDetails.rep[b].newMMR)
-				return -1;
-			return 0;
-		});
-		if(dir==='Top'){
-			this.reps.slice(0,3).map(r=>{
-				let d = this.saleDetails.rep[r];
-				d.name = r;
-				this.leftCardDetails.push(d)
-			})
-		}else{
-			this.reps.reverse().slice(0,3).map(r=>{
-				let d = this.saleDetails.rep[r];
-				d.name = r;
-				this.leftCardDetails.push(d)
-			})
-		}
+		this.dashboardService.getLeftPanelData(this.filter, this.leftSort).subscribe((res: any) => {
+			this.leftCardDetails = res.data;
+		})
 	}
 	topMenuClick(menu) {
 		this.filter = menu;
 		this.getData();
+		this.getLeftPanelData();
 	}
 	toLeftMenuClick(menu) {
 		this.leftSort = menu;
-		this.getLeftCardReps(this.leftSort);
+		this.getLeftPanelData();
 	}
 	getDate(time) {
 		return new Date(time);

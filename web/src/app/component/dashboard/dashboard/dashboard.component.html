@@ -9,8 +9,9 @@
 			<div class="row">
 				<div class="col-12">
 					<div class="reps-filter sw">
-						<div class="col-4">
-							<ng-select [(ngModel)]="selectedRep" class="custom" [items]="reps" [searchable]="0" [placeholder]="'Select Rep'"></ng-select>
+						<div class="col-4" *ngIf="reps">
+							<ng-select [(ngModel)]="selectedRep" (remove)="onRepRemove($event)" (change)="getData($event)" bindValue="rep" bindLabel="rep"
+							 class="custom" [items]="reps" [searchable]="0" [placeholder]="'Select Rep'"></ng-select>
 						</div>
 					</div>
 				</div>
@@ -21,19 +22,18 @@
 					<div class="funnel">
 						<div class="funnel-data" *ngFor="let f of funnel;">
 							<div class="heading"> {{f}}</div>
-							<div class="value">{{selectedRep ?saleDetails.rep[selectedRep].funnel[f]:saleDetails?.funnel[f]||'0'}}</div>
+							<div class="value" *ngIf="saleDetails">{{selectedRep ?(saleDetails.rep[selectedRep]?.funnel[f]||0):saleDetails?.funnel[f]||'0'}}</div>
 						</div>
 					</div>
 				</div>
 				<div class="col-4">
 					<div class="card sw calls">
 						<div class="heading">Calls</div>
-						<div class="value">{{saleDetails.call}}/{{target.call[filter]}}</div>
+						<div class="value">{{saleDetails?.call}}/{{target.call[filter]}}</div>
 					</div>
 					<div class="card sw wins">
 						<div class="heading">Wins</div>
-						<div class="value">{{saleDetails.won}}/{{target.won[filter]}}</div>
-
+						<div class="value">{{saleDetails?.won}}/{{target.won[filter]}}</div>
 					</div>
 					<div class="card sw revenue">
 						<div class="heading">Incremented Revenue</div>
@@ -68,6 +68,11 @@
 					<tr *ngIf="!saleDetails">
 						<td colspan="1000" class="text-center">
 							<h5>Loading...</h5>
+						</td>
+					</tr>
+					<tr *ngIf="saleDetails && !saleDetails?.Items.length">
+						<td colspan="1000" class="text-center">
+							<h5>No record found...</h5>
 						</td>
 					</tr>
 					<tr *ngFor="let d of saleDetails?.Items">

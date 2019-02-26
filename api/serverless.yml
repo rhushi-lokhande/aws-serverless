@@ -30,6 +30,22 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: 'locusnineSaleDev'
+    LocusnineRepsDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: N
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: 'locusnineRepsDev'
 
 functions:
   create:
@@ -37,14 +53,30 @@ functions:
     events:
       -
         http:
-          path: user/create
+          path: locusnine/create
           method: get
           cors: true
   getSaleData:
-      handler: handler.getSaleData
-      events:
-        -
-          http:
-            path: user/getSaleData
-            method: get
-            cors: true
+    handler: handler.getSaleData
+    events:
+      -
+        http:
+          path: locusnine/getSaleData
+          method: get
+          cors: true
+  getReps:
+    handler: handler.getReps
+    events:
+      -
+        http:
+          path: locusnine/getReps
+          method: get
+          cors: true
+  getLeftPanelData:
+    handler: handler.getLeftPanelData
+    events:
+      -
+        http:
+          path: locusnine/getLeftPanelData
+          method: get
+          cors: true
